@@ -3,6 +3,10 @@ import { Construct } from 'constructs';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import * as path from 'path';
 
 export class InfraStack extends cdk.Stack {
@@ -42,8 +46,43 @@ export class InfraStack extends cdk.Stack {
     });
 
     const submitIntegration = new apigateway.LambdaIntegration(scoringFunction);
-    
+
     const submitPath = api.root.addResource('submit');
     submitPath.addMethod('POST', submitIntegration);
+
+    // 4. Frontend Hosting (S3 + CloudFront)
+    const websiteBucket = new s3.Bucket(this, 'RRIFrontendBucket', {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    });
+
+    const distribution = new cloudfront.Distribution(this, 'RRIFrontendDistribution', {
+      defaultBehavior: {
+        origin: new origins.S3Origin(websiteBucket),
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      },
+      defaultRootObject: 'index.html',
+      errorResponses: [
+        {
+          httpStatus: 404,
+          responseHttpStatus: 200,
+          responsePagePath: '/index.html',
+        },
+      ],
+    });
+
+    new s3deploy.BucketDeployment(this, 'DeployRRIFrontend', {
+      sources: [s3deploy.Source.asset(path.join(__dirname, '../../frontend/out'))],
+      destinationBucket: websiteBucket,
+      distribution,
+      distributionPaths: ['/*'],
+    });
+
+    // Output the Deployment URLs
+    new cdk.CfnOutput(this, 'FrontendURL', {
+      value: `https://${distribution.distributionDomainName}`,
+      description: 'Production URL for the Sovereign Retirement Assessment App',
+    });
   }
 }
