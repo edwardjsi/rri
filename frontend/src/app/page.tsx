@@ -86,10 +86,10 @@ export default function Home() {
         <ShieldCheck className="w-8 h-8 text-blue-600" />
       </div>
       <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight mb-6">
-        Sovereign Retirement Reality Check™
+        The Sovereign Retirement Reality Check™
       </h1>
       <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-        Will your portfolio survive the next decade of market volatility, inflation, and unexpected life events? Discover your true financial fragility score in 3 minutes.
+        Are you building "Sovereign" wealth or just "fragile" savings? Reveal hidden fragilities in your financial life in 3 minutes.
       </p>
       <button
         onClick={handleStart}
@@ -256,44 +256,37 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 mb-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">What does this mean?</h3>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            Your score indicates how resilient your retirement portfolio is against the four horsemen of retirement danger: sequence of returns risk (Market), purchasing power loss (Inflation), outliving your money (Income), and unexpected life events (Protection).
+        <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 mb-8 text-center">
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">The Next Step:</h3>
+          <p className="text-xl text-blue-700 font-semibold mb-6">
+            {archetype.cta}
           </p>
-
-          <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-            <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
-              <ShieldCheck className="w-5 h-5 mr-2 text-blue-600" /> The Sovereign Roadmap
-            </h4>
-            <p className="text-sm text-gray-600">
-              The highest tier of wealth management isn't just about accumulating money—it's about building a sovereign fortress that cannot be breached by economic downturns. It's time to elevate your strategy.
-            </p>
-          </div>
         </div>
 
         {/* Schedule Consultation Call to Action */}
         <div className="mt-12 p-8 bg-gradient-to-br from-slate-900 to-black rounded-3xl text-white shadow-2xl relative overflow-hidden border border-slate-800">
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-          <div className="text-center mb-8">
-            <h3 className="text-3xl font-bold mb-4 tracking-tight">Protect Your Sovereign Wealth</h3>
-            <p className="text-slate-400 max-w-xl mx-auto text-lg">
-              Book a complimentary Sovereign Blueprint consultation to identify specific blind spots and discover advanced strategies to bulletproof your legacy.
+          <div className="text-center mb-8 relative z-10">
+            <h3 className="text-3xl font-bold mb-4 tracking-tight">Book Your 'Sovereign Retirement Roadmap' Call</h3>
+            <p className="text-slate-400 max-w-xl mx-auto text-lg mb-4">
+              In this 30-minute diagnosis, we will:
             </p>
+            <ul className="text-left text-slate-300 max-w-md mx-auto space-y-2 mb-8">
+              <li>1. Review your specific 'Fragility Score'.</li>
+              <li>2. Identify the exact gaps in your Protection, AI, and Market layers.</li>
+              <li>3. Show you how to build a ₹4 Crore timeline that lets you sleep at night.</li>
+            </ul>
           </div>
 
-          {/* Placeholder Scheduling Widget (e.g., Calendly iframe) */}
-          <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 md:p-8 flex flex-col items-center justify-center min-h-[400px]">
-            <div className="w-16 h-16 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center mb-4">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h4 className="text-xl font-medium text-slate-200 mb-2">Scheduling Widget Here</h4>
-            <p className="text-sm text-slate-500 mb-6 text-center max-w-sm">
-              Replace this block with your Calendly or SavvyCal embed code.<br />
-              <code>&lt;iframe src="https://calendly.com/your-link" ...&gt;&lt;/iframe&gt;</code>
-            </p>
+          {/* Live Scheduling Widget (Calendly iframe) */}
+          <div className="w-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden min-h-[700px] relative z-10">
+            <iframe
+              src="https://calendly.com/immanuelsantosh/30min"
+              width="100%"
+              height="700"
+              frameBorder="0"
+              title="Schedule a Sovereign Blueprint Consultation"
+            ></iframe>
           </div>
         </div>
       </motion.div>
