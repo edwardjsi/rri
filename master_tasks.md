@@ -1,9 +1,10 @@
 # Master Task List
 
 ## To Do
-* [ ] Final backend deployment to production with real MailerLite API Key.
+* [ ] (Version 2.0) Implement AWS SES to email personalized PDF reports to users upon completion.
 
 ## Done
+* [x] Final full-stack deployment to production (AWS S3 + CloudFront) via CDK.
 * [x] Initialize Next.js frontend project.
 * [x] Create UI array for the 15 Sovereign Retirement questions.
 * [x] Build React state to track user score.
