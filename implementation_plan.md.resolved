@@ -1,0 +1,28 @@
+# Session 2: Frontend & Logic Integration Implementation Plan
+
+We will build the frontend for the Sovereign Retirement Reality Check™ (RRI) application using Next.js, React, and Tailwind CSS. The frontend will present a 15-question assessment, calculate a score, and submit the results to our AWS backend.
+
+## Proposed Changes
+
+### 1. Next.js App Initialization
+- Initialize a new Next.js project in the `/frontend` directory using `npx create-next-app@latest`. We will configure it to use TypeScript, Tailwind CSS, and the App Router.
+
+### 2. Frontend Project Structure
+- `frontend/src/app/page.tsx`: The main entry point containing the landing page and the assessment UI.
+- `frontend/src/components/`: Reusable components like `QuestionCard`, `ProgressBar`, and `LeadCaptureForm`.
+- `frontend/src/data/questions.ts`: The static array containing the 15 Sovereign Retirement questions and their respective scoring logic (options and weights).
+- `frontend/src/utils/api.ts`: Helper function to submit the assessment data via `fetch` to our AWS API Gateway endpoint (`process.env.NEXT_PUBLIC_API_URL`).
+
+### 3. Application State & Logic
+- Utilize React `useState` to track the current question index, user answers, and the calculated internal score.
+- After the 15 questions, show the lead capture form to gather Name, Email, and Phone before displaying the final results.
+- Implement the Archetype grading logic based on the user's final score to determine their financial fragility bracket.
+
+## Verification Plan
+### Automated Tests
+- Run `npm run build` to ensure the Next.js application compiles without TypeScript or linting errors.
+
+### Manual Verification
+- Start the local development server (`npm run dev`).
+- Manually click through all 15 questions to verify state transitions and progress bar updates.
+- Test the final lead capture submission and verify that the data successfully appears in the DynamoDB table and routes to MailerLite (if configured).
