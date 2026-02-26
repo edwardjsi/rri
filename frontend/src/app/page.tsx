@@ -273,15 +273,28 @@ export default function Home() {
         </div>
 
         {/* Schedule Consultation Call to Action */}
-        <div className="text-center p-8 bg-gradient-to-br from-blue-900 to-slate-900 rounded-3xl text-white shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-          <h3 className="text-3xl font-bold mb-4">Bulletproof Your Retirement</h3>
-          <p className="text-blue-100 mb-8 max-w-xl mx-auto">
-            Book a complimentary Sovereign Blueprint consultation to identify your specific blind spots and discover advanced strategies the ultra-wealthy use to protect their legacy.
-          </p>
-          <a href="#" className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-blue-900 bg-white hover:bg-blue-50 rounded-full shadow-lg transition-all transform hover:-translate-y-1">
-            Schedule My Consultation
-          </a>
+        <div className="mt-12 p-8 bg-gradient-to-br from-slate-900 to-black rounded-3xl text-white shadow-2xl relative overflow-hidden border border-slate-800">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          <div className="text-center mb-8">
+            <h3 className="text-3xl font-bold mb-4 tracking-tight">Protect Your Sovereign Wealth</h3>
+            <p className="text-slate-400 max-w-xl mx-auto text-lg">
+              Book a complimentary Sovereign Blueprint consultation to identify specific blind spots and discover advanced strategies to bulletproof your legacy.
+            </p>
+          </div>
+
+          {/* Placeholder Scheduling Widget (e.g., Calendly iframe) */}
+          <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 md:p-8 flex flex-col items-center justify-center min-h-[400px]">
+            <div className="w-16 h-16 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h4 className="text-xl font-medium text-slate-200 mb-2">Scheduling Widget Here</h4>
+            <p className="text-sm text-slate-500 mb-6 text-center max-w-sm">
+              Replace this block with your Calendly or SavvyCal embed code.<br />
+              <code>&lt;iframe src="https://calendly.com/your-link" ...&gt;&lt;/iframe&gt;</code>
+            </p>
+          </div>
         </div>
       </motion.div>
     );

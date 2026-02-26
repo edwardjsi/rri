@@ -1,0 +1,25 @@
+# Sovereign Retirement Reality Check™ (RRI) - Task List
+
+## Session 1: Infrastructure & Backend (Day 1)
+- [x] Plan AWS CDK infrastructure
+- [x] Bootstrap AWS CDK environment (`cdk init`)
+- [x] Create CDK stack for DynamoDB table (Partition Key: `sessionId`)
+- [x] Create CDK stack for Lambda function (Scoring, DB write, & MailerLite API integration)
+- [x] Store MailerLite API Key securely (Instructions provided)
+- [x] Create CDK stack for API Gateway (POST endpoint)
+- [x] Verify IAM permissions for Lambda to write to DynamoDB
+- [x] Create [.github/workflows/deploy.yml](file://wsl$/Ubuntu/home/edwar/rri/.github/workflows/deploy.yml) for CI/CD
+
+## Session 2: Frontend & Logic Integration (Day 2)
+- [x] Initialize Next.js frontend project
+- [x] Create UI array for the 15 Sovereign Retirement questions
+- [x] Build React state to track user score
+- [x] Create API service in React to POST data to AWS
+- [x] Connect frontend to the AWS API Gateway
+
+## Session 3: Styling, Lead Capture & Polish (Day 3)
+- [x] Implement Tailwind CSS for premium design
+- [x] Build Results Page logic based on final score brackets
+- [x] Build the final Lead Capture form and Results rendering
+- [x] Embed scheduling widget on Results Page
+- [x] End-to-end testing and final production deployment

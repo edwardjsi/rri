@@ -1,15 +1,17 @@
 # Master Task List
 
 ## To Do
-* [ ] Initialize Next.js frontend project.
-* [ ] Create UI array for the 15 Sovereign Retirement questions.
-* [ ] Build React state to track user score.
-* [ ] Create API service in React to POST data to AWS.
-* [ ] Build Results Page logic based on final score brackets.
-* [ ] Embed scheduling widget on Results Page.
+* [ ] Final backend deployment to production with real MailerLite API Key.
 
-## In Progress
-* [ ] Session 2: Frontend & Logic Integration.
+## Done
+* [x] Initialize Next.js frontend project.
+* [x] Create UI array for the 15 Sovereign Retirement questions.
+* [x] Build React state to track user score.
+* [x] Create API service in React to POST data to AWS.
+* [x] Build Results Page logic based on final score brackets.
+* [x] Embed scheduling widget on Results Page.
+* [x] Implement Tailwind CSS for premium design.
+* [x] Build the final Lead Capture form and Results rendering.
 
 ## Done
 * [x] Bootstrap AWS CDK environment (`cdk init`).
