@@ -3,10 +3,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 nvm use 20
 
-cd ~/rri/frontend
+cd /home/immanuels/Desktop/rri/frontend
 npm ci --include=optional
 npm run build
 
-cd ~/rri/infra
+cd /home/immanuels/Desktop/rri/infra
 npm ci
 npx cdk deploy --require-approval never

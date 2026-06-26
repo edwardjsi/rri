@@ -242,16 +242,16 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-3xl mx-auto"
       >
-        <div className={`p-8 rounded-3xl ${archetype.bgAlert} border ${archetype.color.replace('text-', 'border-').replace('500', '200')} text-center mb-8 shadow-sm`}>
-          <p className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-2">Your Sovereign Archetype</p>
-          <h2 className={`text-4xl md:text-5xl font-extrabold ${archetype.color} mb-4`}>
+        <div className="p-8 rounded-3xl bg-white border-4 text-center mb-8 shadow-xl" style={{ borderLeftColor: archetype.borderColor }}>
+          <p className="text-sm font-bold uppercase tracking-widest text-gray-600 mb-2">Your Sovereign Archetype</p>
+          <h2 className={`text-4xl md:text-5xl font-extrabold ${archetype.titleColor} mb-4 drop-shadow-sm`}>
             {archetype.title}
           </h2>
           <div className="flex justify-center items-end gap-2 mb-6">
-            <span className="text-6xl font-black text-gray-900 leading-none">{scorePercentage}</span>
-            <span className="text-xl font-bold text-gray-400 mb-1">/ 100</span>
+            <span className="text-6xl md:text-7xl font-black text-gray-900 leading-none drop-shadow-sm">{scorePercentage}</span>
+            <span className="text-xl font-bold text-gray-500 mb-1">/ 100</span>
           </div>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto font-medium">
+          <p className="text-lg text-gray-800 max-w-2xl mx-auto font-medium leading-relaxed">
             {archetype.description}
           </p>
         </div>

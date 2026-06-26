@@ -179,24 +179,24 @@ export const getArchetype = (score: number) => {
         return {
             title: "The Fragile High-Earner",
             description: "You are earning well, but your wealth is exposed. You lack a defensive foundation and a Triple-Proof system. One AI shift, one market crash, or a medical emergency could derail your future.",
-            color: "text-red-500",
-            bgAlert: "bg-red-50",
+            borderColor: "#ef4444",
+            titleColor: "text-red-600",
             cta: "You don't need more products; you need a Sovereign Architecture."
         };
     } else if (score < 65) {
         return {
             title: "The Vulnerable Builder",
             description: "You have a solid start and some protections in place, but your system is not completely decoupled from your time or immune to severe market/inflation shocks.",
-            color: "text-amber-500",
-            bgAlert: "bg-amber-50",
+            borderColor: "#f59e0b",
+            titleColor: "text-amber-600",
             cta: "You need to upgrade from random products to a cohesive Triple-Proof system."
         };
     } else {
         return {
             title: "The Sovereign Investor",
             description: "Congratulations. You are operating from a position of true financial sovereignty. Your wealth is decoupled from your time and protected against the major wealth killers.",
-            color: "text-emerald-500",
-            bgAlert: "bg-emerald-50",
+            borderColor: "#10b981",
+            titleColor: "text-emerald-600",
             cta: "Continue to optimize and protect your Sovereign Architecture."
         };
     }
