@@ -7,6 +7,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as path from 'path';
 
 export class InfraStack extends cdk.Stack {
@@ -34,6 +35,12 @@ export class InfraStack extends cdk.Stack {
 
     // Grant Lambda permissions to put items in DynamoDB
     table.grantWriteData(scoringFunction);
+
+    // Grant Lambda permissions to send emails via SES
+    scoringFunction.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['ses:SendEmail', 'ses:SendRawEmail'],
+      resources: ['*'],
+    }));
 
     // 3. API Gateway
     const api = new apigateway.RestApi(this, 'RRIApi', {

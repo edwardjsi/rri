@@ -1,11 +1,14 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { SESv2Client, SendEmailCommand } = require('@aws-sdk/client-sesv2');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
+const sesClient = new SESv2Client({ region: 'ap-south-1' });
 
-// Admin email to notify - CHANGE THIS TO YOUR EMAIL
+// Admin email to notify - MUST BE VERIFIED IN SES
 const ADMIN_EMAIL = 'edwardjsi@gmail.com';
+const FROM_EMAIL = 'edwardjsi@gmail.com'; // Must be verified in SES
 
 // Question map for answer labels
 const QUESTIONS = [
@@ -26,14 +29,7 @@ const QUESTIONS = [
     { id: 15, category: 'Freedom', text: "The 'Autopilot' Check: Does managing your money require constant attention?" }
 ];
 
-const OPTION_LABELS = {
-    1: 'Vanishes immediately (100% employer dependent)',
-    3: 'Small backup (under ₹5L personal cover)',
-    5: 'Sovereign (₹25L+ personal policy)'
-};
-
 function getOptionLabel(questionId, score) {
-    // All questions use 1/3/5 scoring with similar semantic meaning
     if (score === 1) return 'Low resilience / Fragile';
     if (score === 3) return 'Moderate resilience / Vulnerable';
     if (score === 5) return 'High resilience / Sovereign';
@@ -101,8 +97,8 @@ exports.handler = async (event) => {
             }
         }
 
-        // 3. Send Admin Notification Email (with full answers)
-        await sendAdminNotification({ sessionId, name, email, phone, score, answers });
+        // 3. Send Admin Notification Email via SES
+        await sendAdminNotificationSES({ sessionId, name, email, phone, score, answers });
 
         return {
             statusCode: 200,
@@ -123,56 +119,47 @@ exports.handler = async (event) => {
     }
 };
 
-async function sendAdminNotification(data) {
-    const mlApiKey = process.env.MAILERLITE_API_KEY;
-    if (!mlApiKey || mlApiKey === 'dummy-key') {
-        console.warn('MailerLite API Key not configured. Skipping admin notification.');
-        return;
-    }
-
+async function sendAdminNotificationSES(data) {
     const { sessionId, name, email, phone, score, answers } = data;
     const archetype = getArchetype(score);
     const maxScore = 75;
     const scorePercentage = Math.round((score / maxScore) * 100);
 
-    // Use MailerLite Transactional Email API
-    const transactionalPayload = {
-        from: 'noreply@sovereignretirement.com', // Must be a verified domain in MailerLite
-        to: ADMIN_EMAIL,
-        subject: `🎯 New RRI Assessment: ${name} - ${archetype.title} (${scorePercentage}%)`,
-        html: generateAdminEmailHtml(data, archetype, scorePercentage),
-        text: generateAdminEmailText(data, archetype, scorePercentage)
-    };
+    const subject = `🎯 New RRI Assessment: ${name} - ${archetype.title} (${scorePercentage}%)`;
+    const htmlBody = generateAdminEmailHtml(data, archetype, scorePercentage);
+    const textBody = generateAdminEmailText(data, archetype, scorePercentage);
+
+    const command = new SendEmailCommand({
+        FromEmailAddress: FROM_EMAIL,
+        Destination: {
+            ToAddresses: [ADMIN_EMAIL]
+        },
+        Content: {
+            Simple: {
+                Subject: { Data: subject, Charset: 'UTF-8' },
+                Body: {
+                    Html: { Data: htmlBody, Charset: 'UTF-8' },
+                    Text: { Data: textBody, Charset: 'UTF-8' }
+                }
+            }
+        }
+    });
 
     try {
-        const response = await fetch('https://connect.mailerlite.com/api/transactional/email', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${mlApiKey}`
-            },
-            body: JSON.stringify(transactionalPayload)
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('MailerLite Transactional Email Error:', errorText);
-            // Fallback: log the notification locally
-            console.log('ADMIN NOTIFICATION (fallback log):', JSON.stringify({
-                to: ADMIN_EMAIL,
-                subject: transactionalPayload.subject,
-                name,
-                email,
-                phone,
-                score,
-                archetype: archetype.title
-            }, null, 2));
-        } else {
-            console.log('Admin notification email sent successfully.');
-        }
+        const response = await sesClient.send(command);
+        console.log('Admin notification email sent via SES:', response.MessageId);
     } catch (error) {
-        console.error('Error sending admin notification:', error);
+        console.error('SES Email Error:', error);
+        // Fallback log
+        console.log('ADMIN NOTIFICATION (fallback log):', JSON.stringify({
+            to: ADMIN_EMAIL,
+            subject,
+            name,
+            email,
+            phone,
+            score,
+            archetype: archetype.title
+        }, null, 2));
     }
 }
 
@@ -189,7 +176,6 @@ function getArchetype(score) {
 function generateAdminEmailHtml(data, archetype, scorePercentage) {
     const { name, email, phone, score, sessionId, createdAt, answers } = data;
     
-    // Build answers HTML
     let answersHtml = '';
     if (answers && Object.keys(answers).length > 0) {
         answersHtml = '<div style="background: white; padding: 24px; border-radius: 8px; border-left: 4px solid #6b7280;">\n            <h2 style="margin: 0 0 16px 0; color: #1f2937; font-size: 20px;">All Answers</h2>\n            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">\n                <thead>\n                    <tr style="background: #f9fafb;">\n                        <th style="padding: 10px 8px; text-align: left; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb; width: 5%;">#</th>\n                        <th style="padding: 10px 8px; text-align: left; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb; width: 25%;">Category</th>\n                        <th style="padding: 10px 8px; text-align: left; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb; width: 50%;">Question</th>\n                        <th style="padding: 10px 8px; text-align: left; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb; width: 20%;">Answer</th>\n                    </tr>\n                </thead>\n                <tbody>';
@@ -207,6 +193,13 @@ function generateAdminEmailHtml(data, archetype, scorePercentage) {
         answersHtml += '\n                </tbody>\n            </table>\n        </div>';
     }
     
+    const archetypeColors = {
+        red: { bg: '#fef2f2', text: '#dc2626', border: '#ef4444' },
+        amber: { bg: '#fffbeb', text: '#d97706', border: '#f59e0b' },
+        emerald: { bg: '#ecfdf5', text: '#059669', border: '#10b981' }
+    };
+    const colors = archetypeColors[archetype.color] || archetypeColors.amber;
+
     return `
 <!DOCTYPE html>
 <html>
@@ -246,13 +239,13 @@ function generateAdminEmailHtml(data, archetype, scorePercentage) {
             </table>
         </div>
 
-        <div style="background: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid ${archetype.color === 'red' ? '#ef4444' : archetype.color === 'amber' ? '#f59e0b' : '#10b981'};">
+        <div style="background: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid ${colors.border};">
             <h2 style="margin: 0 0 16px 0; color: #1f2937; font-size: 20px;">Assessment Results</h2>
             <table style="width: 100%; border-collapse: collapse;">
                 <tr>
                     <td style="padding: 8px 0; font-weight: 600; color: #6b7280; width: 140px;">Archetype:</td>
                     <td style="padding: 8px 0; color: #1f2937;">
-                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 14px; background: ${archetype.color === 'red' ? '#fef2f2' : archetype.color === 'amber' ? '#fffbeb' : '#ecfdf5'}; color: ${archetype.color === 'red' ? '#dc2626' : archetype.color === 'amber' ? '#d97706' : '#059669'};">
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 14px; background: ${colors.bg}; color: ${colors.text};">
                             ${archetype.title}
                         </span>
                     </td>
