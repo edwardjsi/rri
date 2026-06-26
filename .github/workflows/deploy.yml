@@ -12,6 +12,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     env:
       # Allow Node 20 until CDK fully supports Node 22+
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: 'true'

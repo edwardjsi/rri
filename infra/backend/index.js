@@ -98,7 +98,8 @@ exports.handler = async (event) => {
         }
 
         // 3. Send Admin Notification Email via SES
-        await sendAdminNotificationSES({ sessionId, name, email, phone, score, answers });
+        const createdAt = new Date().toISOString();
+        await sendAdminNotificationSES({ sessionId, name, email, phone, score, answers, createdAt });
 
         return {
             statusCode: 200,
